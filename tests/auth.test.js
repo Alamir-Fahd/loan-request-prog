@@ -6,7 +6,7 @@ function assert(condition, message) {
 }
 
 console.log("Starting Authentication Tests...");
-const successResult = login("admin", "admin123");
+const successResult = login("admin", "securePassword123");
 assert(successResult.success === true, "Admin should login successfully with correct credentials");
 
 const emptyInput = login("", "");
