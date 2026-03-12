@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 # Efficient Layer Caching
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 COPY . . 
 
