@@ -1,15 +1,16 @@
 FROM node:18-alpine
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
+# Efficient Layer Caching
 COPY package*.json ./
+RUN npm ci
 
-RUN npm ci --only=production
+COPY . . 
 
-COPY . .
-
+# Security: Run as non-root user
 USER node
 
-HEALTHCHECK --interval=30s CMD node -e "require('./src/index.js')"
+EXPOSE 3000
 
-CMD ["node", "src/index.js"]
+CMD ["npm", "start"]
