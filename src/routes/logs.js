@@ -1,5 +1,5 @@
 const express = require('express');
-const crypto = require('crypto'); // Built into Node 18 [cite: 363]
+const crypto = require('crypto'); // Built into Node 18
 const { requireAuth } = require('../middleware/auth');
 const { publishLog, consumeAllLogs } = require('../rabbitmq');
 
@@ -12,14 +12,14 @@ router.use(requireAuth);
 router.post('/', async (req, res) => {
   const { level, message } = req.body;
 
-  // 1. Validation: Reject bad data before touching the broker [cite: 362]
+  // 1. Validation: Reject bad data before touching the broker
   if (!level || !message) {
     return res.status(400).json({ error: 'Missing required fields: level and message' });
   }
 
-  // 2. Construct the enterprise log object [cite: 352, 353]
+  // 2. Construct the enterprise log object
   const logEntry = {
-    id: crypto.randomUUID(),           // Unique trace ID [cite: 363]
+    id: crypto.randomUUID(),           // Unique trace ID
     userId: req.user.sub,              // Extracted directly from the validated Keycloak JWT 
     level,
     message,
@@ -29,22 +29,24 @@ router.post('/', async (req, res) => {
   try {
     // 3. Publish to RabbitMQ
     await publishLog(logEntry);
-    res.status(201).json({ message: 'Log published successfully', log: logEntry }); [cite: 357]
+    res.status(201).json({ message: 'Log published successfully', log: logEntry });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Failed to publish log:', error);
-    res.status(500).json({ error: 'Internal Server Error: Message Broker unavailable' }); [cite: 364]
+    res.status(500).json({ error: 'Internal Server Error: Message Broker unavailable' });
   }
 });
 
 // --- READ PATH: Consume all logs ---
 router.get('/', async (req, res) => {
   try {
-    // Perform the destructive read [cite: 359, 360]
+    // Perform the destructive read
     const logs = await consumeAllLogs();
-    res.status(200).json(logs); [cite: 359]
+    res.status(200).json(logs);
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Failed to consume logs:', error);
-    res.status(500).json({ error: 'Internal Server Error: Message Broker unavailable' }); [cite: 364]
+    res.status(500).json({ error: 'Internal Server Error: Message Broker unavailable' });
   }
 });
 
