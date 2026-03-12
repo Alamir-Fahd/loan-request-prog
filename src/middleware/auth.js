@@ -12,7 +12,8 @@ function getKey(header, callback) {
     if (err) {
       return callback(err);
     }
-    const signingKey = key.publicKey  key.rsaPublicKey;
+    // Fix: Added the || operator here
+    const signingKey = key.publicKey || key.rsaPublicKey; 
     callback(null, signingKey);
   });
 }
