@@ -1,0 +1,36 @@
+[
+  {
+    "name": "rejected",
+    "priority": 30,
+    "conditions": {
+      "any": [
+        { "fact": "creditScore", "operator": "lessThan", "value": 600 },
+        { "fact": "debtToIncomeRatio", "operator": "greaterThan", "value": 0.5 }
+      ]
+    },
+    "event": { "type": "rejected" }
+  },
+  {
+    "name": "referred",
+    "priority": 20,
+    "conditions": {
+      "all": [
+        { "fact": "creditScore", "operator": "greaterThanInclusive", "value": 600 },
+        { "fact": "creditScore", "operator": "lessThanInclusive", "value": 699 },
+        { "fact": "debtToIncomeRatio", "operator": "lessThanInclusive", "value": 0.5 }
+      ]
+    },
+    "event": { "type": "referred" }
+  },
+  {
+    "name": "approved",
+    "priority": 10,
+    "conditions": {
+      "all": [
+        { "fact": "creditScore", "operator": "greaterThanInclusive", "value": 700 },
+        { "fact": "debtToIncomeRatio", "operator": "lessThanInclusive", "value": 0.4 }
+      ]
+    },
+    "event": { "type": "approved" }
+  }
+]
