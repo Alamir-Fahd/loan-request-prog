@@ -13,10 +13,11 @@ services:
 
   # 2. Temporal: Durable workflow execution engine
   temporal:
-    image: temporalio/auto-setup:1.24
+    image: temporalio/admin-tools:latest
+    command: ["temporal", "server", "start-dev", "--ip", "0.0.0.0"]
     ports:
       - "7233:7233" 
-      - "8080:8080" 
+      - "8233:8233" 
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "7233"]
       interval: 10s
